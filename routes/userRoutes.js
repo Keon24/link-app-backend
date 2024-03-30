@@ -30,7 +30,7 @@ router.post("/register", async (req, res,) => {
 router.post("/login", async (req, res) => {
     const {username,password} = req.body;
     try {
-    const user = await UserModel.findOne(username);
+    const user = await UserModel.findOne({ username });
     if(!user) {
         return res.status(400).json({type: UserErrors.NO_USER_FOUND});
     }
@@ -38,7 +38,7 @@ router.post("/login", async (req, res) => {
     if(!isPasswordValid) {
        return res.status(400).json({type: UserErrors.WRONG_CREDENTIALS});
     }
-    const token = jwt.sign({id:user_id},"secretwebapp");
+    const token = jwt.sign({id: user._id},"secretwebapp");
     res.json({token, userID: user._id});
     } catch (error) {
         res.status(500).json({type: "Internal Server Error"});
@@ -46,3 +46,4 @@ router.post("/login", async (req, res) => {
 }) ;
 
 export default router;
+
