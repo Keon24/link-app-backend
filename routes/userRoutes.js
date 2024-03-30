@@ -1,11 +1,13 @@
+import express from "express"
 import bcrypt from "bcrypt"
-import UserModel from "../models/usermodels";
-import UserErrors from "../errors/usererrors";
+import UserModel from "../models/usermodels.js";
+import UserErrors from "../errors/usererrors.js";
+import jwt from "jsonwebtoken";
 
+const router = express.Router();
 
-
-Router.post("/register", async (req, res,) => {
-    const [ username, password ] = req.body;
+router.post("/register", async (req, res,) => {
+    const { username, password } = req.body;
    try {
     const user = await UserModel.findOne({username});
     if(user) {
@@ -23,3 +25,24 @@ Router.post("/register", async (req, res,) => {
     
    }
 });
+
+/*Login User*/
+router.post("/login", async (req, res) => {
+    const {username,password} = req.body;
+    try {
+    const user = await UserModel.findOne(username);
+    if(!user) {
+        return res.status(400).json({type: UserErrors.NO_USER_FOUND});
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if(!isPasswordValid) {
+       return res.status(400).json({type: UserErrors.WRONG_CREDENTIALS});
+    }
+    const token = jwt.sign({id:user_id},"secretwebapp");
+    res.json({token, userID: user._id});
+    } catch (error) {
+        res.status(500).json({type: "Internal Server Error"});
+    }
+}) ;
+
+export default router;
