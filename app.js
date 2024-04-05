@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import userRouter from "./routes/userRoutes.js"
+import linkRouter from "./routes/linkRoutes.js"
 import dotenv from "dotenv";
 dotenv.config()
 
@@ -25,4 +26,4 @@ app.listen(PORT, () => {
 
 });
 app.use("/user", userRouter);
-
+app.use('/link', linkRouter);
