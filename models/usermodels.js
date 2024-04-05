@@ -10,7 +10,13 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true 
-    }
+    },
+    links: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Link' 
+    }]
+    
+
 });
 
 const UserModel = mongoose.model("User", userSchema);
