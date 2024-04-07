@@ -51,4 +51,24 @@ router.get("/:userId" , async (req, res) => {
  }
 });
 
+router.put("/:linkId", async (req, res) => {
+try {
+    const {url, platform} = req.body;
+    const linkId = req.params.linkId;
+
+    let link = await LinkModel.findById(linkId);
+    if(!link) {
+        return res.status(404).json({message: "link not found"})
+    }
+
+    if(url) link.url = url;
+    if(platform) link.platform = platform;
+
+    await link.save();
+    res.status(200).json(link)
+} catch (error) {
+    res.status(500).json({message: error.message});
+    
+}
+})
 export default router;
