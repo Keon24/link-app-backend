@@ -9,21 +9,13 @@ const linkSchema = new mongoose.Schema({
    platform: {
     type: String,
     required: true,
-    enum: [ 'Youtube', 'Youtube', 'Linkedin', 'Facebbok', 'Frontend Mentor', 'other']
+    enum: [ , 'Youtube', 'Linkedin', 'Facebbok', 'Frontend Mentor', 'other']
    },
-   displayName: {
-    type: String,
-    trim: true,
-    default: ''
-   },
-   description: {
-    type: String,
-     trim: true,
-     default: ""
-   },
+
    userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User' 
+    ref: 'User',
+    required: true 
   }
 }, { timestamps: true });
 

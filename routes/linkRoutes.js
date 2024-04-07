@@ -4,35 +4,38 @@ import UserModel from "../models/usermodels.js";
 
 const router = express.Router();
 
-router.post('/link', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
-    const { url, platform, displayName, description, userId } = req.body;
-    if(!url || !platform || userId ) {
+    const { url, platform, userId } = req.body;
+    if(!url || !platform || !userId ) {
      return res.status(400).send("All fields Required")
     }
 
-   
-    
-        const newLink = new LinkModel ({ url, platform, displayName, description})
+    let existingLink = await LinkModel.findOne({ userId, platform});
+
+    if(existingLink) {
+      existingLink.url = url;
+      await existingLink.save();
+      res.status(200).json(existingLink)
+
+    }else{
+        const newLink = new LinkModel ({ url, platform, userId});
         await newLink.save();
 
         const user = await UserModel.findById(userId);
-        if (!user)
+        if (!user) 
         return res.status(404).json("User not found")
 
-         user.links.push(newLink);
+         user.links.push(newLink._id);
          await user.save();
 
          res.status(201).json(newLink);
-
+         }
     } catch (error) {
-        req.status(500).json({message: error.message});
+        res.status(500).json({message: error.message});
         
     }
 })
 
-router.get("/link"), async (req, res) => {
-    
-}
 
 export default router;
