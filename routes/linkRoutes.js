@@ -36,7 +36,7 @@ router.post('/', async (req, res) => {
         
     }
 })
-
+//Retrieved User links successfully
 router.get("/:userId" , async (req, res) => {
  try {
     const userId = req.params.userId;
@@ -50,7 +50,7 @@ router.get("/:userId" , async (req, res) => {
     res.status(500).json({message: error.message});
  }
 });
-
+// Successfully updated the links
 router.put("/:linkId", async (req, res) => {
 try {
     const {url, platform} = req.body;
@@ -71,4 +71,20 @@ try {
     
 }
 })
+
+router.delete("/:linkId", async (req, res) => {
+    try {
+        const linkId = req.params.linkId;
+
+        const result = await LinkModel.deleteOne({ _id: linkId });
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ message: "Link not found" });
+        }
+
+        res.status(200).json({ message: "Link deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 export default router;
