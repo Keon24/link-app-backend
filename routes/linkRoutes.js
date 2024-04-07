@@ -37,5 +37,18 @@ router.post('/', async (req, res) => {
     }
 })
 
+router.get("/:userId" , async (req, res) => {
+ try {
+    const userId = req.params.userId;
+    const user = await UserModel.findById(userId).populate('links')
+
+    if(!user) {
+        return res.status(404).json({message: "User not found"});
+    }
+    res.json(user.links)
+ } catch (error) {
+    res.status(500).json({message: error.message});
+ }
+});
 
 export default router;
